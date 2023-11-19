@@ -1,3 +1,5 @@
+`ifndef ADDER
+`define ADDER
 /* This file contains the system verilog implementation of 32 bit
 Parallel Prefix adder. Parallel prefix adder is an improvement of
 look ahead adder where the carry from one bit to other bit is calculated
@@ -98,6 +100,12 @@ endmodule
  * [in] a 32-Bit input operand to the prefix adder
  * [in] b 32-Bit input operand to the prefix adder
  * [in] cin 1-Bit carry input to the prefix adder
+ * [in] a_sign 1-Bit actual sign of the operand a 
+ * [in] b_sign 1-Bit actual sign of the operand b
+ * [in] sub 1-Bit indicating whether the adder is performing addition or
+ *          2's complement subtraction.
+ *          sub = 0: addition
+ *          sub = 1: 2's complement subtraction
  * [out] sum 32-Bit sum calculated
  * [out] carry_out 1-Bit flag indicating whether carry is generated
  * [out] overflow 1-Bit flag indicating whether overflow happened
@@ -105,7 +113,7 @@ endmodule
  * [out] zero 1-Bit flag indicating whether the output is zero
  */
 module prefixAdder(input logic [31:0] a,b,
-                   input logic cin,
+                   input logic cin, a_sign, b_sign, sub,
                    output logic [31:0] sum,
                    output logic carry_out, overflow, negative, zero);
     logic p[31:0], g[31:0];
@@ -251,11 +259,12 @@ module prefixAdder(input logic [31:0] a,b,
     endgenerate
 
     assign carry_out = (a[31] & b[31]) | (b[31] & gij[31]) | (gij[31] & a[31]);
-    assign overflow = carry_out ^ gij[30];
+    assign overflow = (~(a_sign ^ b_sign ^ sub)) & (sum[31] ^ a_sign);
     assign zero = (sum == 32'b0) ? 1'b1 : 1'b0;
     assign negative = (sum[31] == 1'b1) ? 1'b1 : 1'b0;
 
-
 endmodule
+
+`endif
 
 
