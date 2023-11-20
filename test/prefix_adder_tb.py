@@ -2,7 +2,7 @@ import cocotb
 import pytest
 from cocotb.triggers import Timer
 
-def get_expected_overflow(a_sign, b_sign, sub, expected_sum):
+def get_expected_overflow(a_sign, b_sign, sub, expected_Result):
     expected_overflow = 0
     if a_sign == b_sign:
         if sub:
@@ -14,7 +14,7 @@ def get_expected_overflow(a_sign, b_sign, sub, expected_sum):
             expected_overflow = 1
         else:
             expected_overflow = 0 
-    expected_overflow = expected_overflow & ((expected_sum >> 31) ^ a_sign)
+    expected_overflow = expected_overflow & ((expected_Result >> 31) ^ a_sign)
 
     return expected_overflow
 
@@ -22,11 +22,11 @@ def get_expected_overflow(a_sign, b_sign, sub, expected_sum):
 def print_signals(prefix_adder):
     prefix_adder.a._log.info("Value of a is: b\'" + str(prefix_adder.a.value.binstr))
     prefix_adder.b._log.info("Value of b is: b\'" + str(prefix_adder.b.value.binstr))
-    prefix_adder.sum._log.info("Value of sum is: b\'" + str(prefix_adder.sum.value.binstr))
+    prefix_adder.Result._log.info("Value of Result is: b\'" + str(prefix_adder.Result.value.binstr))
     prefix_adder.carry_out._log.info("Value of Carry out is: b\'" + str(prefix_adder.carry_out.value.binstr))
     prefix_adder.overflow._log.info("Value of Overflow flag is: b\'" + str(prefix_adder.overflow.value.binstr))
     prefix_adder.negative._log.info("Value of Negative flag is: b\'" + str(prefix_adder.negative.value.binstr))
-    prefix_adder.zero._log.info("Value of Zero is: b\'" + str(prefix_adder.zero.value.binstr))
+    prefix_adder.ZeroFlag._log.info("Value of ZeroFlag is: b\'" + str(prefix_adder.ZeroFlag.value.binstr))
 
 @cocotb.test()
 async def test_prefix_adder_001(prefix_adder):
@@ -44,23 +44,23 @@ async def test_prefix_adder_001(prefix_adder):
     prefix_adder.cin.value = 0
     prefix_adder.a_sign.value = 0
     prefix_adder.b_sign.value =  0
-    prefix_adder.sub.value =  0
+    prefix_adder.opcode.value =  0
 
     expected_overflow = get_expected_overflow(0, 0, 0, 0)
 
     await Timer(1, units='ns')
 
-    prefix_adder.sum._log.info("Value of sum is: b\'" + str(prefix_adder.sum.value.binstr))
+    prefix_adder.Result._log.info("Value of Result is: b\'" + str(prefix_adder.Result.value.binstr))
     prefix_adder.carry_out._log.info("Value of Carry out is: b\'" + str(prefix_adder.carry_out.value.binstr))
     prefix_adder.overflow._log.info("Value of Overflow flag is: b\'" + str(prefix_adder.overflow.value.binstr))
     prefix_adder.negative._log.info("Value of Negative flag is: b\'" + str(prefix_adder.negative.value.binstr))
-    prefix_adder.zero._log.info("Value of Zero is: b\'" + str(prefix_adder.zero.value.binstr))
+    prefix_adder.ZeroFlag._log.info("Value of ZeroFlag is: b\'" + str(prefix_adder.ZeroFlag.value.binstr))
 
-    assert prefix_adder.sum.value.integer == 0
+    assert prefix_adder.Result.value.integer == 0
     assert prefix_adder.carry_out.value.integer == 0
     assert prefix_adder.overflow.value.integer == expected_overflow
     assert prefix_adder.negative.value.integer == 0
-    assert prefix_adder.zero.value.integer == 1 
+    assert prefix_adder.ZeroFlag.value.integer == 1 
 
 
 @cocotb.test()
@@ -79,23 +79,23 @@ async def test_prefix_adder_002(prefix_adder):
     prefix_adder.cin.value = 0
     prefix_adder.a_sign.value = 0
     prefix_adder.b_sign.value =  0
-    prefix_adder.sub.value =  0
+    prefix_adder.opcode.value =  0
 
-    expected_overflow = get_expected_overflow(a_sign = 0, b_sign = 0, sub = 0, expected_sum = 1)
+    expected_overflow = get_expected_overflow(a_sign = 0, b_sign = 0, sub = 0, expected_Result = 1)
 
     await Timer(1, units='ns')
 
-    prefix_adder.sum._log.info("Value of sum is: b\'" + str(prefix_adder.sum.value.binstr))
+    prefix_adder.Result._log.info("Value of Result is: b\'" + str(prefix_adder.Result.value.binstr))
     prefix_adder.carry_out._log.info("Value of Carry out is: b\'" + str(prefix_adder.carry_out.value.binstr))
     prefix_adder.overflow._log.info("Value of Overflow flag is: b\'" + str(prefix_adder.overflow.value.binstr))
     prefix_adder.negative._log.info("Value of Negative flag is: b\'" + str(prefix_adder.negative.value.binstr))
-    prefix_adder.zero._log.info("Value of Zero is: b\'" + str(prefix_adder.zero.value.binstr))
+    prefix_adder.ZeroFlag._log.info("Value of ZeroFlag is: b\'" + str(prefix_adder.ZeroFlag.value.binstr))
 
-    assert prefix_adder.sum.value.integer == 1
+    assert prefix_adder.Result.value.integer == 1
     assert prefix_adder.carry_out.value.integer == 0
     assert prefix_adder.overflow.value.integer == expected_overflow
     assert prefix_adder.negative.value.integer == 0
-    assert prefix_adder.zero.value.integer == 0 
+    assert prefix_adder.ZeroFlag.value.integer == 0 
 
 
 @cocotb.test()
@@ -114,23 +114,23 @@ async def test_prefix_adder_003(prefix_adder):
     prefix_adder.cin.value = 0
     prefix_adder.a_sign.value = 0
     prefix_adder.b_sign.value =  0
-    prefix_adder.sub.value =  0
+    prefix_adder.opcode.value =  0
 
-    expected_overflow = get_expected_overflow(a_sign = 0, b_sign = 0, sub = 0, expected_sum = 2)
+    expected_overflow = get_expected_overflow(a_sign = 0, b_sign = 0, sub = 0, expected_Result = 2)
 
     await Timer(1, units='ns')
 
-    prefix_adder.sum._log.info("Value of sum is: b\'" + str(prefix_adder.sum.value.binstr))
+    prefix_adder.Result._log.info("Value of Result is: b\'" + str(prefix_adder.Result.value.binstr))
     prefix_adder.carry_out._log.info("Value of Carry out is: b\'" + str(prefix_adder.carry_out.value.binstr))
     prefix_adder.overflow._log.info("Value of Overflow flag is: b\'" + str(prefix_adder.overflow.value.binstr))
     prefix_adder.negative._log.info("Value of Negative flag is: b\'" + str(prefix_adder.negative.value.binstr))
-    prefix_adder.zero._log.info("Value of Zero is: b\'" + str(prefix_adder.zero.value.binstr))
+    prefix_adder.ZeroFlag._log.info("Value of ZeroFlag is: b\'" + str(prefix_adder.ZeroFlag.value.binstr))
 
-    assert prefix_adder.sum.value.integer == 2
+    assert prefix_adder.Result.value.integer == 2
     assert prefix_adder.carry_out.value.integer == 0
     assert prefix_adder.overflow.value.integer == expected_overflow
     assert prefix_adder.negative.value.integer == 0
-    assert prefix_adder.zero.value.integer == 0 
+    assert prefix_adder.ZeroFlag.value.integer == 0 
 
 
 @cocotb.test()
@@ -149,23 +149,23 @@ async def test_prefix_adder_004(prefix_adder):
     prefix_adder.cin.value = 0
     prefix_adder.a_sign.value = 0
     prefix_adder.b_sign.value =  0
-    prefix_adder.sub.value =  0
+    prefix_adder.opcode.value =  0
 
-    expected_overflow = get_expected_overflow(a_sign = 0, b_sign = 0, sub = 0, expected_sum = 30)
+    expected_overflow = get_expected_overflow(a_sign = 0, b_sign = 0, sub = 0, expected_Result = 30)
 
     await Timer(1, units='ns')
 
-    prefix_adder.sum._log.info("Value of sum is: b\'" + str(prefix_adder.sum.value.binstr))
+    prefix_adder.Result._log.info("Value of Result is: b\'" + str(prefix_adder.Result.value.binstr))
     prefix_adder.carry_out._log.info("Value of Carry out is: b\'" + str(prefix_adder.carry_out.value.binstr))
     prefix_adder.overflow._log.info("Value of Overflow flag is: b\'" + str(prefix_adder.overflow.value.binstr))
     prefix_adder.negative._log.info("Value of Negative flag is: b\'" + str(prefix_adder.negative.value.binstr))
-    prefix_adder.zero._log.info("Value of Zero is: b\'" + str(prefix_adder.zero.value.binstr))
+    prefix_adder.ZeroFlag._log.info("Value of ZeroFlag is: b\'" + str(prefix_adder.ZeroFlag.value.binstr))
 
-    assert prefix_adder.sum.value.integer == 30
+    assert prefix_adder.Result.value.integer == 30
     assert prefix_adder.carry_out.value.integer == 0
     assert prefix_adder.overflow.value.integer == expected_overflow
     assert prefix_adder.negative.value.integer == 0
-    assert prefix_adder.zero.value.integer == 0 
+    assert prefix_adder.ZeroFlag.value.integer == 0 
 
 
 @cocotb.test()
@@ -184,23 +184,23 @@ async def test_prefix_adder_005(prefix_adder):
     prefix_adder.cin.value = 0
     prefix_adder.a_sign.value = 0
     prefix_adder.b_sign.value =  0
-    prefix_adder.sub.value =  0
+    prefix_adder.opcode.value =  0
 
-    expected_overflow = get_expected_overflow(a_sign = 0, b_sign = 0, sub = 0, expected_sum = 255 + 255)
+    expected_overflow = get_expected_overflow(a_sign = 0, b_sign = 0, sub = 0, expected_Result = 255 + 255)
 
     await Timer(1, units='ns')
 
-    prefix_adder.sum._log.info("Value of sum is: b\'" + str(prefix_adder.sum.value.binstr))
+    prefix_adder.Result._log.info("Value of Result is: b\'" + str(prefix_adder.Result.value.binstr))
     prefix_adder.carry_out._log.info("Value of Carry out is: b\'" + str(prefix_adder.carry_out.value.binstr))
     prefix_adder.overflow._log.info("Value of Overflow flag is: b\'" + str(prefix_adder.overflow.value.binstr))
     prefix_adder.negative._log.info("Value of Negative flag is: b\'" + str(prefix_adder.negative.value.binstr))
-    prefix_adder.zero._log.info("Value of Zero is: b\'" + str(prefix_adder.zero.value.binstr))
+    prefix_adder.ZeroFlag._log.info("Value of ZeroFlag is: b\'" + str(prefix_adder.ZeroFlag.value.binstr))
 
-    assert prefix_adder.sum.value.integer == (255 + 255)
+    assert prefix_adder.Result.value.integer == (255 + 255)
     assert prefix_adder.carry_out.value.integer == 0
     assert prefix_adder.overflow.value.integer == expected_overflow
     assert prefix_adder.negative.value.integer == 0
-    assert prefix_adder.zero.value.integer == 0
+    assert prefix_adder.ZeroFlag.value.integer == 0
 
 
 @cocotb.test()
@@ -219,23 +219,23 @@ async def test_prefix_adder_006(prefix_adder):
     prefix_adder.cin.value = 0
     prefix_adder.a_sign.value = 0
     prefix_adder.b_sign.value =  0
-    prefix_adder.sub.value =  0
+    prefix_adder.opcode.value =  0
 
-    expected_overflow = get_expected_overflow(a_sign = 0, b_sign = 0, sub = 0, expected_sum = 511 + 511)
+    expected_overflow = get_expected_overflow(a_sign = 0, b_sign = 0, sub = 0, expected_Result = 511 + 511)
 
     await Timer(1, units='ns')
 
-    prefix_adder.sum._log.info("Value of sum is: b\'" + str(prefix_adder.sum.value.binstr))
+    prefix_adder.Result._log.info("Value of Result is: b\'" + str(prefix_adder.Result.value.binstr))
     prefix_adder.carry_out._log.info("Value of Carry out is: b\'" + str(prefix_adder.carry_out.value.binstr))
     prefix_adder.overflow._log.info("Value of Overflow flag is: b\'" + str(prefix_adder.overflow.value.binstr))
     prefix_adder.negative._log.info("Value of Negative flag is: b\'" + str(prefix_adder.negative.value.binstr))
-    prefix_adder.zero._log.info("Value of Zero is: b\'" + str(prefix_adder.zero.value.binstr))
+    prefix_adder.ZeroFlag._log.info("Value of ZeroFlag is: b\'" + str(prefix_adder.ZeroFlag.value.binstr))
 
-    assert prefix_adder.sum.value.integer == (511 + 511)
+    assert prefix_adder.Result.value.integer == (511 + 511)
     assert prefix_adder.carry_out.value.integer == 0
     assert prefix_adder.overflow.value.integer == expected_overflow
     assert prefix_adder.negative.value.integer == 0
-    assert prefix_adder.zero.value.integer == 0
+    assert prefix_adder.ZeroFlag.value.integer == 0
 
 @cocotb.test()
 async def test_prefix_adder_007(prefix_adder):
@@ -253,23 +253,23 @@ async def test_prefix_adder_007(prefix_adder):
     prefix_adder.cin.value = 0
     prefix_adder.a_sign.value = 0
     prefix_adder.b_sign.value =  0
-    prefix_adder.sub.value =  0
+    prefix_adder.opcode.value =  0
 
-    expected_overflow = get_expected_overflow(a_sign = 0, b_sign = 0, sub = 0, expected_sum = 65535 + 65535)
+    expected_overflow = get_expected_overflow(a_sign = 0, b_sign = 0, sub = 0, expected_Result = 65535 + 65535)
 
     await Timer(1, units='ns')
 
-    prefix_adder.sum._log.info("Value of sum is: b\'" + str(prefix_adder.sum.value.binstr))
+    prefix_adder.Result._log.info("Value of Result is: b\'" + str(prefix_adder.Result.value.binstr))
     prefix_adder.carry_out._log.info("Value of Carry out is: b\'" + str(prefix_adder.carry_out.value.binstr))
     prefix_adder.overflow._log.info("Value of Overflow flag is: b\'" + str(prefix_adder.overflow.value.binstr))
     prefix_adder.negative._log.info("Value of Negative flag is: b\'" + str(prefix_adder.negative.value.binstr))
-    prefix_adder.zero._log.info("Value of Zero is: b\'" + str(prefix_adder.zero.value.binstr))
+    prefix_adder.ZeroFlag._log.info("Value of ZeroFlag is: b\'" + str(prefix_adder.ZeroFlag.value.binstr))
 
-    assert prefix_adder.sum.value.integer == (65535 + 65535)
+    assert prefix_adder.Result.value.integer == (65535 + 65535)
     assert prefix_adder.carry_out.value.integer == 0
     assert prefix_adder.overflow.value.integer == expected_overflow
     assert prefix_adder.negative.value.integer == 0
-    assert prefix_adder.zero.value.integer == 0
+    assert prefix_adder.ZeroFlag.value.integer == 0
 
 
 @cocotb.test()
@@ -288,28 +288,28 @@ async def test_prefix_adder_008(prefix_adder):
     prefix_adder.cin.value = 0
     prefix_adder.a_sign.value = 1
     prefix_adder.b_sign.value = 1
-    prefix_adder.sub.value = 0
+    prefix_adder.opcode.value = 0
 
 
     await Timer(1, units='ns')
 
-    prefix_adder.sum._log.info("Value of sum is: b\'" + str(prefix_adder.sum.value.binstr))
+    prefix_adder.Result._log.info("Value of Result is: b\'" + str(prefix_adder.Result.value.binstr))
     prefix_adder.carry_out._log.info("Value of Carry out is: b\'" + str(prefix_adder.carry_out.value.binstr))
     prefix_adder.overflow._log.info("Value of Overflow flag is: b\'" + str(prefix_adder.overflow.value.binstr))
     prefix_adder.negative._log.info("Value of Negative flag is: b\'" + str(prefix_adder.negative.value.binstr))
-    prefix_adder.zero._log.info("Value of Zero is: b\'" + str(prefix_adder.zero.value.binstr))
+    prefix_adder.ZeroFlag._log.info("Value of ZeroFlag is: b\'" + str(prefix_adder.ZeroFlag.value.binstr))
 
-    expected_sum = (int(pow(2,32)) - 1 + int(pow(2,32)) - 1) % (int(pow(2,32)))
+    expected_Result = (int(pow(2,32)) - 1 + int(pow(2,32)) - 1) % (int(pow(2,32)))
     expected_carry = (int(pow(2,32)) - 1 + int(pow(2,32)) - 1) // (int(pow(2,32)))
-    expected_negative = expected_sum >> 31
-    expected_zero = 1 if expected_sum == 0 else 0
-    expected_overflow = get_expected_overflow(a_sign = 1, b_sign = 1, sub = 0, expected_sum = expected_sum)
+    expected_negative = expected_Result >> 31
+    expected_ZeroFlag = 1 if expected_Result == 0 else 0
+    expected_overflow = get_expected_overflow(a_sign = 1, b_sign = 1, sub = 0, expected_Result = expected_Result)
 
-    assert prefix_adder.sum.value.integer == expected_sum
+    assert prefix_adder.Result.value.integer == expected_Result
     assert prefix_adder.carry_out.value.integer == expected_carry
     assert prefix_adder.overflow.value.integer == expected_overflow
     assert prefix_adder.negative.value.integer == expected_negative
-    assert prefix_adder.zero.value.integer == expected_zero
+    assert prefix_adder.ZeroFlag.value.integer == expected_ZeroFlag
 
 
 @cocotb.test()
@@ -332,27 +332,27 @@ async def test_prefix_adder_009(prefix_adder):
     prefix_adder.cin.value = 0
     prefix_adder.a_sign.value = 1
     prefix_adder.b_sign.value =  1
-    prefix_adder.sub.value =  0
+    prefix_adder.opcode.value =  0
 
     await Timer(1, units='ns')
 
-    prefix_adder.sum._log.info("Value of sum is: b\'" + str(prefix_adder.sum.value.binstr))
+    prefix_adder.Result._log.info("Value of Result is: b\'" + str(prefix_adder.Result.value.binstr))
     prefix_adder.carry_out._log.info("Value of Carry out is: b\'" + str(prefix_adder.carry_out.value.binstr))
     prefix_adder.overflow._log.info("Value of Overflow flag is: b\'" + str(prefix_adder.overflow.value.binstr))
     prefix_adder.negative._log.info("Value of Negative flag is: b\'" + str(prefix_adder.negative.value.binstr))
-    prefix_adder.zero._log.info("Value of Zero is: b\'" + str(prefix_adder.zero.value.binstr))
+    prefix_adder.ZeroFlag._log.info("Value of ZeroFlag is: b\'" + str(prefix_adder.ZeroFlag.value.binstr))
 
-    expected_sum = (a + b) % (int(pow(2,32)))
+    expected_Result = (a + b) % (int(pow(2,32)))
     expected_carry = (a + b) // (int(pow(2,32)))
-    expected_negative = expected_sum >> 31
-    expected_zero = 1 if expected_sum == 0 else 0
-    expected_overflow = get_expected_overflow(a_sign = 1, b_sign = 1, sub = 0, expected_sum = expected_sum)
+    expected_negative = expected_Result >> 31
+    expected_ZeroFlag = 1 if expected_Result == 0 else 0
+    expected_overflow = get_expected_overflow(a_sign = 1, b_sign = 1, sub = 0, expected_Result = expected_Result)
 
-    assert prefix_adder.sum.value.integer == expected_sum
+    assert prefix_adder.Result.value.integer == expected_Result
     assert prefix_adder.carry_out.value.integer == expected_carry
     assert prefix_adder.overflow.value.integer == expected_overflow
     assert prefix_adder.negative.value.integer == expected_negative
-    assert prefix_adder.zero.value.integer == expected_zero
+    assert prefix_adder.ZeroFlag.value.integer == expected_ZeroFlag
 
 
 @cocotb.test()
@@ -375,27 +375,27 @@ async def test_prefix_adder_010(prefix_adder):
     prefix_adder.cin.value = 0
     prefix_adder.a_sign.value = 0
     prefix_adder.b_sign.value =  0
-    prefix_adder.sub.value =  0
+    prefix_adder.opcode.value =  0
 
     await Timer(1, units='ns')
 
-    prefix_adder.sum._log.info("Value of sum is: b\'" + str(prefix_adder.sum.value.binstr))
+    prefix_adder.Result._log.info("Value of Result is: b\'" + str(prefix_adder.Result.value.binstr))
     prefix_adder.carry_out._log.info("Value of Carry out is: b\'" + str(prefix_adder.carry_out.value.binstr))
     prefix_adder.overflow._log.info("Value of Overflow flag is: b\'" + str(prefix_adder.overflow.value.binstr))
     prefix_adder.negative._log.info("Value of Negative flag is: b\'" + str(prefix_adder.negative.value.binstr))
-    prefix_adder.zero._log.info("Value of Zero is: b\'" + str(prefix_adder.zero.value.binstr))
+    prefix_adder.ZeroFlag._log.info("Value of ZeroFlag is: b\'" + str(prefix_adder.ZeroFlag.value.binstr))
 
-    expected_sum = (a + b) % (int(pow(2,32)))
+    expected_Result = (a + b) % (int(pow(2,32)))
     expected_carry = (a + b) // (int(pow(2,32)))
-    expected_negative = expected_sum >> 31
-    expected_zero = 1 if expected_sum == 0 else 0
-    expected_overflow = get_expected_overflow(a_sign = 0, b_sign = 0, sub = 0, expected_sum = expected_sum)
+    expected_negative = expected_Result >> 31
+    expected_ZeroFlag = 1 if expected_Result == 0 else 0
+    expected_overflow = get_expected_overflow(a_sign = 0, b_sign = 0, sub = 0, expected_Result = expected_Result)
 
-    assert prefix_adder.sum.value.integer == expected_sum
+    assert prefix_adder.Result.value.integer == expected_Result
     assert prefix_adder.carry_out.value.integer == expected_carry
     assert prefix_adder.overflow.value.integer == expected_overflow
     assert prefix_adder.negative.value.integer == expected_negative
-    assert prefix_adder.zero.value.integer == expected_zero
+    assert prefix_adder.ZeroFlag.value.integer == expected_ZeroFlag
 
 @cocotb.test()
 async def test_prefix_adder_011(prefix_adder):
@@ -418,27 +418,27 @@ async def test_prefix_adder_011(prefix_adder):
     prefix_adder.cin.value = 0
     prefix_adder.a_sign.value = 0
     prefix_adder.b_sign.value =  1
-    prefix_adder.sub.value =  0
+    prefix_adder.opcode.value =  0
 
     await Timer(1, units='ns')
 
-    prefix_adder.sum._log.info("Value of sum is: b\'" + str(prefix_adder.sum.value.binstr))
+    prefix_adder.Result._log.info("Value of Result is: b\'" + str(prefix_adder.Result.value.binstr))
     prefix_adder.carry_out._log.info("Value of Carry out is: b\'" + str(prefix_adder.carry_out.value.binstr))
     prefix_adder.overflow._log.info("Value of Overflow flag is: b\'" + str(prefix_adder.overflow.value.binstr))
     prefix_adder.negative._log.info("Value of Negative flag is: b\'" + str(prefix_adder.negative.value.binstr))
-    prefix_adder.zero._log.info("Value of Zero is: b\'" + str(prefix_adder.zero.value.binstr))
+    prefix_adder.ZeroFlag._log.info("Value of ZeroFlag is: b\'" + str(prefix_adder.ZeroFlag.value.binstr))
 
-    expected_sum = (a + b) % (int(pow(2,32)))
+    expected_Result = (a + b) % (int(pow(2,32)))
     expected_carry = (a + b) // (int(pow(2,32)))
-    expected_negative = expected_sum >> 31
-    expected_zero = 1 if expected_sum == 0 else 0
-    expected_overflow = get_expected_overflow(a_sign = 0, b_sign = 1, sub = 0, expected_sum = expected_sum)
+    expected_negative = expected_Result >> 31
+    expected_ZeroFlag = 1 if expected_Result == 0 else 0
+    expected_overflow = get_expected_overflow(a_sign = 0, b_sign = 1, sub = 0, expected_Result = expected_Result)
 
-    assert prefix_adder.sum.value.integer == expected_sum
+    assert prefix_adder.Result.value.integer == expected_Result
     assert prefix_adder.carry_out.value.integer == expected_carry
     assert prefix_adder.overflow.value.integer == expected_overflow
     assert prefix_adder.negative.value.integer == expected_negative
-    assert prefix_adder.zero.value.integer == expected_zero
+    assert prefix_adder.ZeroFlag.value.integer == expected_ZeroFlag
 
 
 @cocotb.test()
@@ -462,27 +462,27 @@ async def test_prefix_adder_012(prefix_adder):
     prefix_adder.cin.value = 0
     prefix_adder.a_sign.value = 1
     prefix_adder.b_sign.value =  1
-    prefix_adder.sub.value =  0
+    prefix_adder.opcode.value =  0
 
     await Timer(1, units='ns')
 
-    prefix_adder.sum._log.info("Value of sum is: b\'" + str(prefix_adder.sum.value.binstr))
+    prefix_adder.Result._log.info("Value of Result is: b\'" + str(prefix_adder.Result.value.binstr))
     prefix_adder.carry_out._log.info("Value of Carry out is: b\'" + str(prefix_adder.carry_out.value.binstr))
     prefix_adder.overflow._log.info("Value of Overflow flag is: b\'" + str(prefix_adder.overflow.value.binstr))
     prefix_adder.negative._log.info("Value of Negative flag is: b\'" + str(prefix_adder.negative.value.binstr))
-    prefix_adder.zero._log.info("Value of Zero is: b\'" + str(prefix_adder.zero.value.binstr))
+    prefix_adder.ZeroFlag._log.info("Value of ZeroFlag is: b\'" + str(prefix_adder.ZeroFlag.value.binstr))
 
-    expected_sum = (a + b) % (int(pow(2,32)))
+    expected_Result = (a + b) % (int(pow(2,32)))
     expected_carry = (a + b) // (int(pow(2,32)))
-    expected_negative = expected_sum >> 31
-    expected_zero = 1 if expected_sum == 0 else 0
-    expected_overflow = get_expected_overflow(a_sign = 1, b_sign = 1, sub = 0, expected_sum = expected_sum)
+    expected_negative = expected_Result >> 31
+    expected_ZeroFlag = 1 if expected_Result == 0 else 0
+    expected_overflow = get_expected_overflow(a_sign = 1, b_sign = 1, sub = 0, expected_Result = expected_Result)
 
-    assert prefix_adder.sum.value.integer == expected_sum
+    assert prefix_adder.Result.value.integer == expected_Result
     assert prefix_adder.carry_out.value.integer == expected_carry
     assert prefix_adder.overflow.value.integer == expected_overflow
     assert prefix_adder.negative.value.integer == expected_negative
-    assert prefix_adder.zero.value.integer == expected_zero
+    assert prefix_adder.ZeroFlag.value.integer == expected_ZeroFlag
 
 @cocotb.test()
 async def test_prefix_adder_013(prefix_adder):
@@ -505,27 +505,27 @@ async def test_prefix_adder_013(prefix_adder):
     prefix_adder.cin.value = 0
     prefix_adder.a_sign.value = 1
     prefix_adder.b_sign.value =  0
-    prefix_adder.sub.value =  0
+    prefix_adder.opcode.value =  0
 
     await Timer(1, units='ns')
 
-    prefix_adder.sum._log.info("Value of sum is: b\'" + str(prefix_adder.sum.value.binstr))
+    prefix_adder.Result._log.info("Value of Result is: b\'" + str(prefix_adder.Result.value.binstr))
     prefix_adder.carry_out._log.info("Value of Carry out is: b\'" + str(prefix_adder.carry_out.value.binstr))
     prefix_adder.overflow._log.info("Value of Overflow flag is: b\'" + str(prefix_adder.overflow.value.binstr))
     prefix_adder.negative._log.info("Value of Negative flag is: b\'" + str(prefix_adder.negative.value.binstr))
-    prefix_adder.zero._log.info("Value of Zero is: b\'" + str(prefix_adder.zero.value.binstr))
+    prefix_adder.ZeroFlag._log.info("Value of ZeroFlag is: b\'" + str(prefix_adder.ZeroFlag.value.binstr))
 
-    expected_sum = (a + b) % (int(pow(2,32)))
+    expected_Result = (a + b) % (int(pow(2,32)))
     expected_carry = (a + b) // (int(pow(2,32)))
-    expected_negative = expected_sum >> 31
-    expected_zero = 1 if expected_sum == 0 else 0
-    expected_overflow = get_expected_overflow(a_sign = 1, b_sign = 0, sub = 0, expected_sum = expected_sum)
+    expected_negative = expected_Result >> 31
+    expected_ZeroFlag = 1 if expected_Result == 0 else 0
+    expected_overflow = get_expected_overflow(a_sign = 1, b_sign = 0, sub = 0, expected_Result = expected_Result)
 
-    assert prefix_adder.sum.value.integer == expected_sum
+    assert prefix_adder.Result.value.integer == expected_Result
     assert prefix_adder.carry_out.value.integer == expected_carry
     assert prefix_adder.overflow.value.integer == expected_overflow
     assert prefix_adder.negative.value.integer == expected_negative
-    assert prefix_adder.zero.value.integer == expected_zero
+    assert prefix_adder.ZeroFlag.value.integer == expected_ZeroFlag
 
 @cocotb.test()
 async def test_prefix_adder_014(prefix_adder):
@@ -548,27 +548,27 @@ async def test_prefix_adder_014(prefix_adder):
     prefix_adder.cin.value = cin
     prefix_adder.a_sign.value = 1
     prefix_adder.b_sign.value =  0
-    prefix_adder.sub.value =  0
+    prefix_adder.opcode.value =  0
 
     await Timer(1, units='ns')
 
-    prefix_adder.sum._log.info("Value of sum is: b\'" + str(prefix_adder.sum.value.binstr))
+    prefix_adder.Result._log.info("Value of Result is: b\'" + str(prefix_adder.Result.value.binstr))
     prefix_adder.carry_out._log.info("Value of Carry out is: b\'" + str(prefix_adder.carry_out.value.binstr))
     prefix_adder.overflow._log.info("Value of Overflow flag is: b\'" + str(prefix_adder.overflow.value.binstr))
     prefix_adder.negative._log.info("Value of Negative flag is: b\'" + str(prefix_adder.negative.value.binstr))
-    prefix_adder.zero._log.info("Value of Zero is: b\'" + str(prefix_adder.zero.value.binstr))
+    prefix_adder.ZeroFlag._log.info("Value of ZeroFlag is: b\'" + str(prefix_adder.ZeroFlag.value.binstr))
 
-    expected_sum = (a + b + cin) % (int(pow(2,32)))
+    expected_Result = (a + b + cin) % (int(pow(2,32)))
     expected_carry = (a + b + cin) // (int(pow(2,32)))
-    expected_negative = expected_sum >> 31
-    expected_zero = 1 if expected_sum == 0 else 0
-    expected_overflow = get_expected_overflow(a_sign = 1, b_sign = 0, sub = 0, expected_sum = expected_sum)
+    expected_negative = expected_Result >> 31
+    expected_ZeroFlag = 1 if expected_Result == 0 else 0
+    expected_overflow = get_expected_overflow(a_sign = 1, b_sign = 0, sub = 0, expected_Result = expected_Result)
 
-    assert prefix_adder.sum.value.integer == expected_sum
+    assert prefix_adder.Result.value.integer == expected_Result
     assert prefix_adder.carry_out.value.integer == expected_carry
     assert prefix_adder.overflow.value.integer == expected_overflow
     assert prefix_adder.negative.value.integer == expected_negative
-    assert prefix_adder.zero.value.integer == expected_zero
+    assert prefix_adder.ZeroFlag.value.integer == expected_ZeroFlag
 
 @cocotb.test()
 async def test_prefix_adder_015(prefix_adder):
@@ -592,27 +592,27 @@ async def test_prefix_adder_015(prefix_adder):
     prefix_adder.cin.value = cin
     prefix_adder.a_sign.value = a_sign
     prefix_adder.b_sign.value = b_sign
-    prefix_adder.sub.value =  sub
+    prefix_adder.opcode.value =  sub
 
     await Timer(1, units='ns')
 
-    prefix_adder.sum._log.info("Value of sum is:" + str(prefix_adder.sum.value.integer) + "(b\'" + str(prefix_adder.sum.value.binstr) + ")")
+    prefix_adder.Result._log.info("Value of Result is:" + str(prefix_adder.Result.value.integer) + "(b\'" + str(prefix_adder.Result.value.binstr) + ")")
     prefix_adder.carry_out._log.info("Value of Carry out is: b\'" + str(prefix_adder.carry_out.value.binstr))
     prefix_adder.overflow._log.info("Value of Overflow flag is: b\'" + str(prefix_adder.overflow.value.binstr))
     prefix_adder.negative._log.info("Value of Negative flag is: b\'" + str(prefix_adder.negative.value.binstr))
-    prefix_adder.zero._log.info("Value of Zero is: b\'" + str(prefix_adder.zero.value.binstr))
+    prefix_adder.ZeroFlag._log.info("Value of ZeroFlag is: b\'" + str(prefix_adder.ZeroFlag.value.binstr))
 
-    expected_sum = (a + b + cin) % (int(pow(2,32)))
+    expected_Result = (a + b + cin) % (int(pow(2,32)))
     expected_carry = abs((a + b + cin)) // (int(pow(2,32)))
-    expected_negative = expected_sum >> 31
-    expected_zero = 1 if expected_sum == 0 else 0
-    expected_overflow = get_expected_overflow(a_sign, b_sign, sub, expected_sum)
+    expected_negative = expected_Result >> 31
+    expected_ZeroFlag = 1 if expected_Result == 0 else 0
+    expected_overflow = get_expected_overflow(a_sign, b_sign, sub, expected_Result)
 
-    assert prefix_adder.sum.value.integer == expected_sum
+    assert prefix_adder.Result.value.integer == expected_Result
     assert prefix_adder.carry_out.value.integer == expected_carry
     assert prefix_adder.overflow.value.integer == expected_overflow
     assert prefix_adder.negative.value.integer == expected_negative
-    assert prefix_adder.zero.value.integer == expected_zero
+    assert prefix_adder.ZeroFlag.value.integer == expected_ZeroFlag
 
 
 @cocotb.test()
@@ -638,27 +638,27 @@ async def test_prefix_adder_016(prefix_adder):
     prefix_adder.cin.value = cin
     prefix_adder.a_sign.value = a_sign
     prefix_adder.b_sign.value = b_sign
-    prefix_adder.sub.value =  sub
+    prefix_adder.opcode.value =  sub
 
     await Timer(1, units='ns')
 
-    prefix_adder.sum._log.info("Value of sum is:" + str(prefix_adder.sum.value.integer) + "(b\'" + str(prefix_adder.sum.value.binstr) + ")")
+    prefix_adder.Result._log.info("Value of Result is:" + str(prefix_adder.Result.value.integer) + "(b\'" + str(prefix_adder.Result.value.binstr) + ")")
     prefix_adder.carry_out._log.info("Value of Carry out is: b\'" + str(prefix_adder.carry_out.value.binstr))
     prefix_adder.overflow._log.info("Value of Overflow flag is: b\'" + str(prefix_adder.overflow.value.binstr))
     prefix_adder.negative._log.info("Value of Negative flag is: b\'" + str(prefix_adder.negative.value.binstr))
-    prefix_adder.zero._log.info("Value of Zero is: b\'" + str(prefix_adder.zero.value.binstr))
+    prefix_adder.ZeroFlag._log.info("Value of ZeroFlag is: b\'" + str(prefix_adder.ZeroFlag.value.binstr))
 
-    expected_sum = (a - b + cin) % (int(pow(2,32)))
+    expected_Result = (a - b + cin) % (int(pow(2,32)))
     expected_carry = abs((a - b + cin)) // (int(pow(2,32)))
-    expected_negative = expected_sum >> 31
-    expected_zero = 1 if expected_sum == 0 else 0
-    expected_overflow = get_expected_overflow(a_sign, b_sign, sub, expected_sum)
+    expected_negative = expected_Result >> 31
+    expected_ZeroFlag = 1 if expected_Result == 0 else 0
+    expected_overflow = get_expected_overflow(a_sign, b_sign, sub, expected_Result)
 
-    assert prefix_adder.sum.value.integer == expected_sum
+    assert prefix_adder.Result.value.integer == expected_Result
     assert prefix_adder.carry_out.value.integer == expected_carry
     assert prefix_adder.overflow.value.integer == expected_overflow
     assert prefix_adder.negative.value.integer == expected_negative
-    assert prefix_adder.zero.value.integer == expected_zero
+    assert prefix_adder.ZeroFlag.value.integer == expected_ZeroFlag
 
 
 @cocotb.test()
@@ -683,27 +683,27 @@ async def test_prefix_adder_017(prefix_adder):
     prefix_adder.cin.value = cin
     prefix_adder.a_sign.value = a_sign
     prefix_adder.b_sign.value = b_sign
-    prefix_adder.sub.value =  sub
+    prefix_adder.opcode.value =  sub
 
     await Timer(1, units='ns')
 
-    prefix_adder.sum._log.info("Value of sum is:" + str(prefix_adder.sum.value.integer) + "(b\'" + str(prefix_adder.sum.value.binstr) + ")")
+    prefix_adder.Result._log.info("Value of Result is:" + str(prefix_adder.Result.value.integer) + "(b\'" + str(prefix_adder.Result.value.binstr) + ")")
     prefix_adder.carry_out._log.info("Value of Carry out is: b\'" + str(prefix_adder.carry_out.value.binstr))
     prefix_adder.overflow._log.info("Value of Overflow flag is: b\'" + str(prefix_adder.overflow.value.binstr))
     prefix_adder.negative._log.info("Value of Negative flag is: b\'" + str(prefix_adder.negative.value.binstr))
-    prefix_adder.zero._log.info("Value of Zero is: b\'" + str(prefix_adder.zero.value.binstr))
+    prefix_adder.ZeroFlag._log.info("Value of ZeroFlag is: b\'" + str(prefix_adder.ZeroFlag.value.binstr))
 
-    expected_sum = (a + b + cin) % (int(pow(2,32)))
+    expected_Result = (a + b + cin) % (int(pow(2,32)))
     expected_carry = abs((a + b + cin)) // (int(pow(2,32)))
-    expected_negative = expected_sum >> 31
-    expected_zero = 1 if expected_sum == 0 else 0
-    expected_overflow = get_expected_overflow(a_sign, b_sign, sub, expected_sum)
+    expected_negative = expected_Result >> 31
+    expected_ZeroFlag = 1 if expected_Result == 0 else 0
+    expected_overflow = get_expected_overflow(a_sign, b_sign, sub, expected_Result)
 
-    assert prefix_adder.sum.value.integer == expected_sum
+    assert prefix_adder.Result.value.integer == expected_Result
     assert prefix_adder.carry_out.value.integer == expected_carry
     assert prefix_adder.overflow.value.integer == expected_overflow
     assert prefix_adder.negative.value.integer == expected_negative
-    assert prefix_adder.zero.value.integer == expected_zero
+    assert prefix_adder.ZeroFlag.value.integer == expected_ZeroFlag
 
 
 @cocotb.test()
@@ -729,27 +729,27 @@ async def test_prefix_adder_018(prefix_adder):
     prefix_adder.cin.value = cin
     prefix_adder.a_sign.value = a_sign
     prefix_adder.b_sign.value = b_sign
-    prefix_adder.sub.value =  sub
+    prefix_adder.opcode.value =  sub
 
     await Timer(1, units='ns')
 
-    prefix_adder.sum._log.info("Value of sum is:" + str(prefix_adder.sum.value.integer) + "(b\'" + str(prefix_adder.sum.value.binstr) + ")")
+    prefix_adder.Result._log.info("Value of Result is:" + str(prefix_adder.Result.value.integer) + "(b\'" + str(prefix_adder.Result.value.binstr) + ")")
     prefix_adder.carry_out._log.info("Value of Carry out is: b\'" + str(prefix_adder.carry_out.value.binstr))
     prefix_adder.overflow._log.info("Value of Overflow flag is: b\'" + str(prefix_adder.overflow.value.binstr))
     prefix_adder.negative._log.info("Value of Negative flag is: b\'" + str(prefix_adder.negative.value.binstr))
-    prefix_adder.zero._log.info("Value of Zero is: b\'" + str(prefix_adder.zero.value.binstr))
+    prefix_adder.ZeroFlag._log.info("Value of ZeroFlag is: b\'" + str(prefix_adder.ZeroFlag.value.binstr))
 
-    expected_sum = (a - b + cin) % (int(pow(2,32)))
+    expected_Result = (a - b + cin) % (int(pow(2,32)))
     expected_carry = abs((a - b + cin)) // (int(pow(2,32)))
-    expected_negative = expected_sum >> 31
-    expected_zero = 1 if expected_sum == 0 else 0
-    expected_overflow = get_expected_overflow(a_sign, b_sign, sub, expected_sum)
+    expected_negative = expected_Result >> 31
+    expected_ZeroFlag = 1 if expected_Result == 0 else 0
+    expected_overflow = get_expected_overflow(a_sign, b_sign, sub, expected_Result)
 
-    assert prefix_adder.sum.value.integer == expected_sum
+    assert prefix_adder.Result.value.integer == expected_Result
     assert prefix_adder.carry_out.value.integer == expected_carry
     assert prefix_adder.overflow.value.integer == expected_overflow
     assert prefix_adder.negative.value.integer == expected_negative
-    assert prefix_adder.zero.value.integer == expected_zero
+    assert prefix_adder.ZeroFlag.value.integer == expected_ZeroFlag
 
 
 @cocotb.test()
@@ -774,27 +774,27 @@ async def test_prefix_adder_019(prefix_adder):
     prefix_adder.cin.value = cin
     prefix_adder.a_sign.value = a_sign
     prefix_adder.b_sign.value = b_sign
-    prefix_adder.sub.value =  sub
+    prefix_adder.opcode.value =  sub
 
     await Timer(1, units='ns')
 
-    prefix_adder.sum._log.info("Value of sum is:" + str(prefix_adder.sum.value.integer) + "(b\'" + str(prefix_adder.sum.value.binstr) + ")")
+    prefix_adder.Result._log.info("Value of Result is:" + str(prefix_adder.Result.value.integer) + "(b\'" + str(prefix_adder.Result.value.binstr) + ")")
     prefix_adder.carry_out._log.info("Value of Carry out is: b\'" + str(prefix_adder.carry_out.value.binstr))
     prefix_adder.overflow._log.info("Value of Overflow flag is: b\'" + str(prefix_adder.overflow.value.binstr))
     prefix_adder.negative._log.info("Value of Negative flag is: b\'" + str(prefix_adder.negative.value.binstr))
-    prefix_adder.zero._log.info("Value of Zero is: b\'" + str(prefix_adder.zero.value.binstr))
+    prefix_adder.ZeroFlag._log.info("Value of ZeroFlag is: b\'" + str(prefix_adder.ZeroFlag.value.binstr))
 
-    expected_sum = (a + b + cin) % (int(pow(2,32)))
+    expected_Result = (a + b + cin) % (int(pow(2,32)))
     expected_carry = 1
-    expected_negative = expected_sum >> 31
-    expected_zero = 1 if expected_sum == 0 else 0
-    expected_overflow = get_expected_overflow(a_sign, b_sign, sub, expected_sum)
+    expected_negative = expected_Result >> 31
+    expected_ZeroFlag = 1 if expected_Result == 0 else 0
+    expected_overflow = get_expected_overflow(a_sign, b_sign, sub, expected_Result)
 
-    assert prefix_adder.sum.value.integer == expected_sum
+    assert prefix_adder.Result.value.integer == expected_Result
     assert prefix_adder.carry_out.value.integer == expected_carry
     assert prefix_adder.overflow.value.integer == expected_overflow
     assert prefix_adder.negative.value.integer == expected_negative
-    assert prefix_adder.zero.value.integer == expected_zero
+    assert prefix_adder.ZeroFlag.value.integer == expected_ZeroFlag
 
 
 @cocotb.test()
@@ -820,24 +820,24 @@ async def test_prefix_adder_020(prefix_adder):
     prefix_adder.cin.value = cin
     prefix_adder.a_sign.value = a_sign
     prefix_adder.b_sign.value = b_sign
-    prefix_adder.sub.value =  sub
+    prefix_adder.opcode.value =  sub
 
     await Timer(1, units='ns')
 
-    prefix_adder.sum._log.info("Value of sum is:" + str(prefix_adder.sum.value.integer) + "(b\'" + str(prefix_adder.sum.value.binstr) + ")")
+    prefix_adder.Result._log.info("Value of Result is:" + str(prefix_adder.Result.value.integer) + "(b\'" + str(prefix_adder.Result.value.binstr) + ")")
     prefix_adder.carry_out._log.info("Value of Carry out is: b\'" + str(prefix_adder.carry_out.value.binstr))
     prefix_adder.overflow._log.info("Value of Overflow flag is: b\'" + str(prefix_adder.overflow.value.binstr))
     prefix_adder.negative._log.info("Value of Negative flag is: b\'" + str(prefix_adder.negative.value.binstr))
-    prefix_adder.zero._log.info("Value of Zero is: b\'" + str(prefix_adder.zero.value.binstr))
+    prefix_adder.ZeroFlag._log.info("Value of ZeroFlag is: b\'" + str(prefix_adder.ZeroFlag.value.binstr))
 
-    expected_sum = (a - b + cin) % (int(pow(2,32)))
+    expected_Result = (a - b + cin) % (int(pow(2,32)))
     expected_carry = abs((a - b + cin)) // (int(pow(2,32)))
-    expected_negative = expected_sum >> 31
-    expected_zero = 1 if expected_sum == 0 else 0
-    expected_overflow = get_expected_overflow(a_sign, b_sign, sub, expected_sum)
+    expected_negative = expected_Result >> 31
+    expected_ZeroFlag = 1 if expected_Result == 0 else 0
+    expected_overflow = get_expected_overflow(a_sign, b_sign, sub, expected_Result)
 
-    assert prefix_adder.sum.value.integer == expected_sum
+    assert prefix_adder.Result.value.integer == expected_Result
     assert prefix_adder.carry_out.value.integer == expected_carry
     assert prefix_adder.overflow.value.integer == expected_overflow
     assert prefix_adder.negative.value.integer == expected_negative
-    assert prefix_adder.zero.value.integer == expected_zero
+    assert prefix_adder.ZeroFlag.value.integer == expected_ZeroFlag

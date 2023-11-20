@@ -9,7 +9,7 @@ on the fly.*/
  * This function does the and operation of 2 one bit operands
  * [in] a 1-Bit operand
  * [in] b 1-Bit operand
- * [out] out 1-Bit result of a & b
+ * [out] out 1-Bit Result of a & b
  */
 module and2(input logic a, input logic b, output logic out);
     assign out = a & b;
@@ -19,7 +19,7 @@ endmodule
  * This function does the OR operation of 2 one bit operands
  * [in] a 1-Bit operand
  * [in] b 1-Bit operand
- * [out] out 1-Bit result of a | b
+ * [out] out 1-Bit Result of a | b
  */
 module or2(input logic a, input logic b, output logic out);
     assign out = a | b;
@@ -30,7 +30,7 @@ endmodule
  * This function does the XOR operation of 2 one bit operands
  * [in] a 1-Bit operand
  * [in] b 1-Bit operand
- * [out] out 1-Bit result of a ^ b
+ * [out] out 1-Bit Result of a ^ b
  */
 module xor2(input logic a, input logic b, output logic out);
     assign out = a ^ b;
@@ -42,7 +42,7 @@ endmodule
  * [in] a 1-Bit operand
  * [in] b 1-Bit operand
  * [in] c 1-Bit operand 
- * [out] out 1-Bit result of a ^ b ^ c
+ * [out] out 1-Bit Result of a ^ b ^ c
  */
 module xor3(input logic a, input logic b, input logic c, output logic out);
     logic temp;
@@ -109,15 +109,17 @@ endmodule
  * [out] sum 32-Bit sum calculated
  * [out] carry_out 1-Bit flag indicating whether carry is generated
  * [out] overflow 1-Bit flag indicating whether overflow happened
- * [out] negative 1-Bit flag indicating whether the result is negative
- * [out] zero 1-Bit flag indicating whether the output is zero
+ * [out] negative 1-Bit flag indicating whether the Result is negative
+ * [out] ZeroFlag 1-Bit flag indicating whether the output is zero
  */
 module prefixAdder(input logic [31:0] a,b,
-                   input logic cin, a_sign, b_sign, sub,
-                   output logic [31:0] sum,
-                   output logic carry_out, overflow, negative, zero);
+                   input logic cin, a_sign, b_sign,
+                   input logic [3:0] opcode,
+                   output logic [31:0] Result,
+                   output logic carry_out, overflow, negative, ZeroFlag);
     logic p[31:0], g[31:0];
     logic pij[31:0], gij[31:0];
+    logic sub;
 
     // calculate the propogate and generate bits for each bit
     generate
@@ -128,6 +130,8 @@ module prefixAdder(input logic [31:0] a,b,
 
     assign pij[0] = 0;
     assign gij[0] = 0;
+
+    assign sub = (opcode == 0) ? 0:1;
 
     // N = 32, there are 5 levels in the prefix adder
 
@@ -250,18 +254,18 @@ module prefixAdder(input logic [31:0] a,b,
     carry c78(p29_15, pij[15], g29_15, gij[15], pij[30], gij[30]);
     carry c79(p30_15, pij[15], g30_15, gij[15], pij[31], gij[31]);
 
-    sum s0(a[0], b[0], cin, sum[0]);
+    sum s0(a[0], b[0], cin, Result[0]);
 
     generate
         genvar j;
         for (j = 1; j <= 31; j++)
-            sum si(a[j], b[j], gij[j], sum[j]);
+            sum si(a[j], b[j], gij[j], Result[j]);
     endgenerate
 
     assign carry_out = (a[31] & b[31]) | (b[31] & gij[31]) | (gij[31] & a[31]);
-    assign overflow = (~(a_sign ^ b_sign ^ sub)) & (sum[31] ^ a_sign);
-    assign zero = (sum == 32'b0) ? 1'b1 : 1'b0;
-    assign negative = (sum[31] == 1'b1) ? 1'b1 : 1'b0;
+    assign overflow = (~(a_sign ^ b_sign ^ sub)) & (Result[31] ^ a_sign);
+    assign ZeroFlag = (Result == 32'b0) ? 1'b1 : 1'b0;
+    assign negative = (Result[31] == 1'b1) ? 1'b1 : 1'b0;
 
 endmodule
 

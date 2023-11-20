@@ -5,7 +5,7 @@ from cocotb.triggers import Timer
 @cocotb.test()
 async def test_comparator_001(comparator):
     '''
-    This function tests signed less than comparison when
+    This function tests signed less than opcode when
     a and b are both negative
     a is positive, b is negative
     a is negative, b is positive
@@ -17,7 +17,7 @@ async def test_comparator_001(comparator):
     expected_result = [0, 0, 1, 1]
 
     for (a_in, b_in) in zip(a,b):
-        comparator.comparison.value = 4
+        comparator.opcode.value = 4
         comparator.A.value = a_in
         negative_bin = ((~b_in) + 1) % (int(pow(2,32)))
         comparator.B.value = negative_bin
@@ -46,7 +46,7 @@ async def test_comparator_001(comparator):
 @cocotb.test()
 async def test_comparator_002(comparator):
     '''
-    This function tests signed greater than comparison when
+    This function tests signed greater than opcode when
     a and b are both negative
     a is positive, b is negative
     a is negative, b is positive
@@ -58,7 +58,7 @@ async def test_comparator_002(comparator):
     expected_result = [1, 1, 0, 0]
 
     for (a_in, b_in) in zip(a,b):
-        comparator.comparison.value = 5
+        comparator.opcode.value = 5
         comparator.A.value = a_in
         negative_bin = ((~b_in) + 1) % (int(pow(2,32)))
         comparator.B.value = negative_bin
@@ -82,7 +82,7 @@ async def test_comparator_002(comparator):
 @cocotb.test()
 async def test_comparator_003(comparator):
     '''
-    This function tests unsigned less than comparison when
+    This function tests unsigned less than opcode when
     a and b are both negative
     a is positive, b is negative
     a is negative, b is positive
@@ -94,7 +94,7 @@ async def test_comparator_003(comparator):
     expected_result = 1
 
     for (a_in, b_in) in zip(a,b):
-        comparator.comparison.value = 6
+        comparator.opcode.value = 6
         comparator.A.value = a_in
         negative_bin = ((~b_in) + 1) % (int(pow(2,32)))
         comparator.B.value = negative_bin
@@ -120,7 +120,7 @@ async def test_comparator_003(comparator):
 @cocotb.test()
 async def test_comparator_004(comparator):
     '''
-    This function tests unsigned greater than comparison when
+    This function tests unsigned greater than opcode when
     a and b are both negative
     a is positive, b is negative
     a is negative, b is positive
@@ -132,7 +132,7 @@ async def test_comparator_004(comparator):
     expected_result = 0
 
     for (a_in, b_in) in zip(a,b):
-        comparator.comparison.value = 7
+        comparator.opcode.value = 7
         comparator.A.value = a_in
         negative_bin = ((~b_in) + 1) % (int(pow(2,32)))
         comparator.B.value = negative_bin
