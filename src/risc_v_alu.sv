@@ -20,6 +20,7 @@
 `include "../src/prefix_adder.sv"
 `include "../src/comparator.sv"
 `include "../src/shifters.sv"
+`include "../src/logical_operators.sv"
 
 module RISC_V_ALU(input logic [31:0] x,y,
                   input logic nx, ix, sx,
@@ -81,7 +82,7 @@ module RISC_V_ALU(input logic [31:0] x,y,
         comparator sub_inst3(
             .A(incrementedx),
             .B(incrementedy),
-            .operation(opcode),
+            .opcode(opcode),
             .a_sign(x_sign),
             .b_sign(y_sign),
             .Result(comparator_out),

@@ -24,17 +24,17 @@ module comparator (
   
   always @(*) begin
     case (opcode)
-      4'b0100: // Signed Less Than (SLT/BLT)
+      4'b0101: // Signed Less Than (SLT/BLT)
         Result = (negative ^ overflow) ? 32'b1 : 32'b0;
-      4'b0101: // Signed greater Than (BGT) 
+      4'b0110: // Signed greater Than (BGT) 
         Result = ((~zero) & (~(negative ^ overflow))) ? 32'b1 : 32'b0;
-      4'b0110: // Unsigned Less Than (SLTU/BLTU)
+      4'b0111: // Unsigned Less Than (SLTU/BLTU)
         Result = (~carry_out) ? 32'b1 : 32'b0;
-      4'b0111: // Unsigned greater than (BGTU)
+      4'b1000: // Unsigned greater than (BGTU)
         Result = ((~zero) & carry_out) ? 32'b1 : 32'b0;
-      4'b1000: // Equal to (BEQ)
+      4'b1001: // Equal to (BEQ)
         Result = (zero) ? 32'b1 : 32'b0;
-      4'b1001: // Not equal to (BNE)
+      4'b1010: // Not equal to (BNE)
         Result = (~zero) ? 32'b1 : 32'b0;
       default:
         Result = 32'b0; // Default operation

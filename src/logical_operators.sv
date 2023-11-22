@@ -1,3 +1,5 @@
+`ifndef LOGICAL
+`define LOGICAL
 module logical_operator (
   input logic [31:0] A,
   input logic [31:0] B,
@@ -8,11 +10,11 @@ module logical_operator (
 
   always @(*) begin
     case (operation)
-      4'b1010: // bitwise AND
+      4'b1011: // bitwise AND
         Result = A & B;
-      4'b1011: // bitwise OR 
+      4'b1100: // bitwise OR 
         Result = A | B;
-      4'b1100: // Bitwise XOR
+      4'b1101: // Bitwise XOR
         Result = A ^ B;
       default:
         Result = 32'b0; // Default operation
@@ -22,3 +24,4 @@ module logical_operator (
   assign ZeroFlag = (Result == 32'b0);
 
 endmodule
+`endif

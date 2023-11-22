@@ -10,11 +10,11 @@ module shift (
 
   always @(*) begin
     case (operation)
-      4'b0001: // Logical left shift
+      4'b0010: // Logical left shift
         Result = A << B;
-      4'b0010: // Logical right shift 
+      4'b0011: // Logical right shift 
         Result = A >> B;
-      4'b011: // Arithmetic right shift
+      4'b0100: // Arithmetic right shift
         Result = A >>> B;
       default:
         Result = 32'b0; // Default operation
