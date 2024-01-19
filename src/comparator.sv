@@ -1,7 +1,7 @@
 `ifndef COMPARATOR
 `define COMPARATOR
 
-`include "../src/prefix_adder.sv"
+`include "../src/prefixAdder.sv"
 
 module comparator (
   input logic [31:0] A,

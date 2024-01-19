@@ -17,12 +17,12 @@
  * opcode - 4 bits operation code
  */
 
-`include "../src/prefix_adder.sv"
+`include "../src/prefixAdder.sv"
 `include "../src/comparator.sv"
-`include "../src/shifters.sv"
+`include "../src/shift.sv"
 `include "../src/logical_operators.sv"
 
-module RISC_V_ALU(input logic [31:0] x,y,
+module risc_v_alu(input logic [31:0] x,y,
                   input logic nx, ix, sx,
                   input logic ny, iy, sy,
                   input logic [3:0] opcode,
